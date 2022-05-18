@@ -2,13 +2,15 @@ import { useState } from "react";
 import { Pressable, StyleSheet, Text, TextInput, View } from "react-native";
 import uuid from "react-native-uuid";
 import { TasksType } from "./TasksList";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 
 interface AddTaskType {
   tasks: TasksType["tasks"];
   setTasks(newTasks: TasksType["tasks"]): any;
+  storeData(newTasks: TasksType["tasks"]): any;
 }
 
-export default function AddTask({ tasks, setTasks }: AddTaskType) {
+export default function AddTask({ tasks, setTasks, storeData }: AddTaskType) {
   const [taskName, setTaskName] = useState("");
   const handleAddTask = () => {
     const newTasks = [
@@ -16,12 +18,13 @@ export default function AddTask({ tasks, setTasks }: AddTaskType) {
       {
         id: uuid.v4(),
         name: taskName,
-        time: new Date(),
+        time: Date.now(),
       },
     ];
 
     if (newTasks && taskName !== "") {
       setTasks(newTasks);
+      storeData(newTasks);
       setTaskName("");
     }
   };
@@ -44,24 +47,24 @@ export default function AddTask({ tasks, setTasks }: AddTaskType) {
 
 const styles = StyleSheet.create({
   container: {
-    marginTop: 80,
-    marginBottom: 5,
-    backgroundColor: "#fff",
+    marginTop: 120,
+    marginBottom: 10,
     alignItems: "center",
     justifyContent: "center",
   },
   inputName: {
     marginTop: 10,
     padding: 10,
-    backgroundColor: "#ccc",
+    backgroundColor: "#fff",
     width: 250,
     fontSize: 15,
+    borderRadius: 5,
   },
   submitButton: {
     marginTop: 15,
     padding: 15,
     width: 200,
-    backgroundColor: "#ccc",
+    backgroundColor: "#7aed93",
     borderRadius: 5,
   },
   strongText: {

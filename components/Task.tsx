@@ -5,7 +5,7 @@ interface TaskType {
   task: {
     id: string | number[];
     name: string;
-    time: Date;
+    time: number;
   };
 }
 
@@ -33,26 +33,22 @@ export default function Task({ task }: TaskType) {
   };
   return (
     <View style={styles.container}>
-      <View
+      <Pressable
+        onPress={handleToggleIsChecked}
         style={[
-          styles.task,
-          { backgroundColor: isChecked ? "#6dd54e" : "#ccc" },
+          styles.taskButton,
+          { backgroundColor: isChecked ? "#e3ac65" : "#ccc" },
         ]}
       >
-        <Pressable onPress={handleToggleIsChecked} style={styles.taskButton}>
-          <Text
-            style={[
-              styles.taskText,
-              { textDecorationLine: isChecked ? "line-through" : "none" },
-            ]}
-          >
-            {task.name}
-          </Text>
-          <Text>
-            {task.time.getHours()}:{task.time.getMinutes()}
-          </Text>
-        </Pressable>
-      </View>
+        <Text
+          style={[
+            styles.taskText,
+            { textDecorationLine: isChecked ? "line-through" : "none" },
+          ]}
+        >
+          {task.name}
+        </Text>
+      </Pressable>
     </View>
   );
 }
@@ -63,12 +59,11 @@ const styles = StyleSheet.create({
     alignItems: "center",
     textAlign: "center",
   },
-  task: {
-    padding: 10,
+  taskButton: {
+    padding: 15,
     width: 250,
     margin: 5,
-  },
-  taskButton: {
+    borderRadius: 5,
     flexDirection: "row",
     justifyContent: "space-between",
   },

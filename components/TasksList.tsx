@@ -5,7 +5,7 @@ export interface TasksType {
   tasks: {
     id: string | number[];
     name: string;
-    time: Date;
+    time: number;
   }[];
 }
 
