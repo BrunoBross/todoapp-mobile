@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { StyleSheet, View } from "react-native";
+import { Alert, StyleSheet, View } from "react-native";
 import AddTask from "./components/AddTask";
 import uuid from "react-native-uuid";
 import TasksList, { TasksType } from "./components/TasksList";
@@ -7,7 +7,53 @@ import AsyncStorage from "@react-native-async-storage/async-storage";
 import RemoveTasks from "./components/RemoveTasks";
 
 export default function App() {
+  const [taskName, setTaskName] = useState<string>("");
+  const [taskColor, setTaskColor] = useState<string>("#76e365");
   const [tasks, setTasks] = useState<TasksType["tasks"]>([]);
+
+  const handleAddTask = () => {
+    const newTasks = [
+      ...tasks,
+      {
+        id: uuid.v4(),
+        name: taskName,
+        color: taskColor,
+        time: Date.now(),
+      },
+    ];
+
+    if (newTasks && taskName !== "") {
+      setTasks(newTasks);
+      storeData(newTasks);
+      setTaskName("");
+    }
+  };
+
+  const handleRemoveTask = (taskId: string | number[]) => {
+    Alert.alert("Você tem certeza?", "Deseja remover essa tarefa?", [
+      {
+        text: "Sim",
+        onPress: () => {
+          const newTasks = tasks.filter((task: any) => task.id !== taskId);
+          if (newTasks) {
+            setTasks(newTasks);
+            storeData(newTasks);
+          }
+        },
+      },
+      {
+        text: "Não",
+      },
+    ]);
+  };
+
+  const handleSetTaskColor = (color: string) => {
+    setTaskColor(color);
+  };
+
+  const handleSetTaskName = (taskName: string) => {
+    setTaskName(taskName);
+  };
 
   useEffect(() => {
     retrieveData();
@@ -44,9 +90,18 @@ export default function App() {
 
   return (
     <View style={styles.container}>
-      <RemoveTasks removeData={removeData} tasks={tasks} />
-      <AddTask tasks={tasks} setTasks={setTasks} storeData={storeData} />
-      <TasksList tasks={tasks} />
+      {tasks.length > 0 && (
+        <RemoveTasks removeData={removeData} tasks={tasks} />
+      )}
+
+      <AddTask
+        taskName={taskName}
+        taskColor={taskColor}
+        handleSetTaskName={handleSetTaskName}
+        handleSetTaskColor={handleSetTaskColor}
+        handleAddTask={handleAddTask}
+      />
+      <TasksList tasks={tasks} handleRemoveTask={handleRemoveTask} />
     </View>
   );
 }
@@ -54,7 +109,7 @@ export default function App() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: "#b870df",
+    backgroundColor: "#7a75ff",
     alignItems: "center",
   },
 });

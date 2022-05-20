@@ -2,45 +2,40 @@ import { useState } from "react";
 import { Pressable, StyleSheet, Text, TextInput, View } from "react-native";
 import uuid from "react-native-uuid";
 import { TasksType } from "./TasksList";
-import AsyncStorage from "@react-native-async-storage/async-storage";
+import ColorPicker from "./ColorPicker";
 
 interface AddTaskType {
-  tasks: TasksType["tasks"];
-  setTasks(newTasks: TasksType["tasks"]): any;
-  storeData(newTasks: TasksType["tasks"]): any;
+  taskName: string;
+  taskColor: string;
+  handleAddTask(): void;
+  handleSetTaskColor(color: string): void;
+  handleSetTaskName(newTaskName: string): void;
 }
 
-export default function AddTask({ tasks, setTasks, storeData }: AddTaskType) {
-  const [taskName, setTaskName] = useState("");
-  const handleAddTask = () => {
-    const newTasks = [
-      ...tasks,
-      {
-        id: uuid.v4(),
-        name: taskName,
-        time: Date.now(),
-      },
-    ];
-
-    if (newTasks && taskName !== "") {
-      setTasks(newTasks);
-      storeData(newTasks);
-      setTaskName("");
-    }
-  };
-
+export default function AddTask({
+  handleAddTask,
+  handleSetTaskColor,
+  handleSetTaskName,
+  taskName,
+  taskColor,
+}: AddTaskType) {
   return (
     <View style={styles.container}>
       <Text style={styles.strongText}>Adicionar Task</Text>
       <TextInput
         style={styles.inputName}
-        onChangeText={(newTaskName) => setTaskName(newTaskName)}
+        onChangeText={(newTaskName) => handleSetTaskName(newTaskName)}
         defaultValue={taskName}
         onSubmitEditing={handleAddTask}
       />
+
       <Pressable style={styles.submitButton} onPress={handleAddTask}>
         <Text style={styles.strongText}>Adicionar</Text>
       </Pressable>
+      <ColorPicker
+        handleSetTaskColor={handleSetTaskColor}
+        currentColor={taskColor}
+      />
     </View>
   );
 }
@@ -59,6 +54,7 @@ const styles = StyleSheet.create({
     width: 250,
     fontSize: 15,
     borderRadius: 5,
+    elevation: 5,
   },
   submitButton: {
     marginTop: 15,

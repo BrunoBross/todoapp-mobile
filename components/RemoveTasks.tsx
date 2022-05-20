@@ -1,4 +1,4 @@
-import { Alert, Pressable, StyleSheet, Text, View } from "react-native";
+import { Alert, Image, Pressable, StyleSheet, View } from "react-native";
 import { TasksType } from "./TasksList";
 
 interface RemoveTasksType {
@@ -24,7 +24,10 @@ export default function RemoveTasks({ removeData, tasks }: RemoveTasksType) {
   return (
     <View style={styles.resetButton}>
       <Pressable onPress={handleRemoveTask}>
-        <Text style={{ textAlign: "center", fontWeight: "bold" }}>Resetar</Text>
+        <Image
+          style={styles.binImage}
+          source={require("../assets/smallBin.png")}
+        />
       </Pressable>
     </View>
   );
@@ -38,5 +41,10 @@ const styles = StyleSheet.create({
     right: 20,
     top: 50,
     borderRadius: 5,
+  },
+  binImage: {
+    marginHorizontal: 5,
+    width: 18,
+    height: 22,
   },
 });
